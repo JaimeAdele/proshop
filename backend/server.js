@@ -11,6 +11,11 @@ connectDB(); // connect to MongoDB
 
 const app = express();
 
+// body parser middleware
+// these two lines get the data from the body of the request (otherwise req.body will be undefined)
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.get('/', (req, res) => {
   res.send('API is running...');
 });
