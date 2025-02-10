@@ -13,7 +13,7 @@ const authUser = asyncHandler(async (req, res) => {
   if (user && (await user.matchPassword(password))) {
     // generate token
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: '30d', // should be 1d in production
+      expiresIn: '30d' // should be 1d in production
     });
 
     // set jwt as http-only cookie
@@ -21,7 +21,7 @@ const authUser = asyncHandler(async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV !== 'development',
       sameSite: 'strict',
-      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+      maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
     });
 
     res.json({
@@ -47,7 +47,12 @@ const registerUser = asyncHandler(async (req, res) => {
 // @route   POST /api/users/logout
 // @access  Private
 const logoutUser = asyncHandler(async (req, res) => {
-  res.send('logout user');
+  res.cookie('jwt', '', {
+    httpOnly: true,
+    expires: new Date(0)
+  });
+
+  res.status(200).json({ message: 'Logged out successfully' });
 });
 
 // @desc    Get user profile
@@ -92,4 +97,14 @@ const updateUser = asyncHandler(async (req, res) => {
   res.send('update user');
 });
 
-export { authUser, registerUser, logoutUser, getUserProfile, updateUserProfile, getUsers, getUserById, deleteUser, updateUser };
+export {
+  authUser,
+  registerUser,
+  logoutUser,
+  getUserProfile,
+  updateUserProfile,
+  getUsers,
+  getUserById,
+  deleteUser,
+  updateUser
+};
