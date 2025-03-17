@@ -147,11 +147,13 @@ const getUserById = asyncHandler(async (req, res) => {
 // @route   DELETE /api/users/:id
 // @access  Private/Admin
 const deleteUser = asyncHandler(async (req, res) => {
+  console.log(`Params ID: ${req.params.id}`); // logs the correct ID
   const user = User.findById(req.params.id);
+  console.log(`User ID: ${user._id}`); // logs undefined
 
   if (user) {
     if (user.isAdmin) {
-      res.status(400);
+      res.status(400); // client error
       throw new Error('Cannot delete admin user');
     }
     await User.deleteOne({ _id: user._id });
